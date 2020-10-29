@@ -7,20 +7,20 @@ namespace Vehicle_Resolution_Libarary.Tests
     public class UnitTest1
     {
 
-        private string GetResult(string input)
-        {
-            var lib = new Start();
-            var result = lib.ResolveSingleWord(input);
+        //private string GetResult(string input)
+        //{
+        //    var lib = new Start();
+        //    var result = lib.ResolveSingleWord(input);
 
-            return result;
-        }
+        //    return result;
+        //}
 
         [TestMethod]
         public void TestNull()
         {
             string input = null;
             var lib = new Start();
-            Assert.ThrowsException<ArgumentException>(()=> lib.ResolveSingleWord(input));
+            Assert.ThrowsException<ArgumentException>(()=> lib.ResolveSingleWord(input, input));
         }
 
         [TestMethod]
@@ -28,7 +28,7 @@ namespace Vehicle_Resolution_Libarary.Tests
         {
             var lib = new Start();
             //var test = lib.ResolveSingleWord("SUNARU");
-            Assert.AreEqual(lib.ResolveSingleWord("SUNARU"), "SUBARU");
+            Assert.AreEqual(lib.ResolveSingleWord("SUNARU", @"C:\Users\user\Documents\sample\Agilis LIVE Make & Models.xlsx"), "SUBARU");
         }
 
     }
