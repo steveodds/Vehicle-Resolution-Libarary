@@ -5,7 +5,7 @@ namespace Vehicle_Resolution_Libarary
     public class Start
     {
         private string _message;
-        public string ResolveSingleWord(string original)
+        public string ResolveSingleWord(string original, string refExcelFile)
         {
             if (string.IsNullOrWhiteSpace(original))
                 throw new ArgumentException("The argument was empty.");
@@ -18,7 +18,7 @@ namespace Vehicle_Resolution_Libarary
             }
             else
             {
-                var check = new NearestCorrectSpelling(null, string.Empty);
+                var check = new NearestCorrectSpelling(null, refExcelFile);
                 var result = check.GetWord(original, out int lev);
                 if (lev == 1000 || lev < 0)
                     throw new Exception("No match was found.");
