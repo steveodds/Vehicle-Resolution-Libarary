@@ -20,7 +20,16 @@ namespace Vehicle_Resolution_Libarary.Tests
         {
             string input = null;
             var lib = new Start();
-            Assert.ThrowsException<ArgumentException>(()=> lib.ResolveSingleWord(input, input));
+            Assert.AreEqual(lib.ResolveSingleWord(input, input), "ERROR: The argument was empty.");
+        }
+
+        [TestMethod]
+        public void TestWrongRefFileInfo()
+        {
+            var lib = new Start();
+            string input = "SUNARU";
+            string refile = @"C:\test.xlsx";
+            Assert.AreEqual(lib.ResolveSingleWord(input, refile), "ERROR: Could not find file");
         }
 
         [TestMethod]
