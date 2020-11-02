@@ -8,11 +8,13 @@ internal class NearestCorrectSpelling
     // public List<MotorModel> FinalList { get; private set; }
     private readonly List<MotorModel> _misspeltModels;
     private readonly List<MotorModel> _filteredModels;
+    private readonly Vehicle_Resolution_Libarary.Logger _logger;
     public NearestCorrectSpelling(List<MotorModel> misspeltModels, string excelFile)
     {
         _misspeltModels = misspeltModels;
         _excelFile = excelFile;
         _filteredModels = new List<MotorModel>();
+        _logger = Vehicle_Resolution_Libarary.Logger.GetInstance();
     }
 
     private string ProcessRawModels(string model)
@@ -41,9 +43,10 @@ internal class NearestCorrectSpelling
 
     public string GetWord(string original, out int lev)
     {
-        string word = String.Empty;
+        string word = string.Empty;
         var levenshtein = new Levenshtein(original.ToLowerInvariant().Trim());
         var levDistance = 1000;
+        _logger.Log($@"Generating vehicle model list from |{_excelFile}|.");
         var models = GetList();
         foreach (var model in models)
         {
@@ -57,6 +60,7 @@ internal class NearestCorrectSpelling
                 break;
         }
         lev = levDistance;
+        _logger.Log("Comparison complete. Returning result.");
         return word;
     }
 
