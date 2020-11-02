@@ -13,7 +13,7 @@ namespace Vehicle_Resolution_Libarary
 
         private Logger() 
         {
-            _logFile = $@"{Environment.SpecialFolder.MyDocuments}\VRL-LOG.log";
+            _logFile = $@"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\VRL-LOG.log";
             if (!File.Exists(_logFile))
                 File.Create(_logFile);
         }
