@@ -9,10 +9,12 @@ using NPOI.SS.UserModel;
 internal class ExcelProcessor
 {
     private readonly string _excelFile;
+    private readonly Vehicle_Resolution_Libarary.Logger _logger;
     public List<MotorModel> RawMotorData {get; set;}
     public ExcelProcessor(string filepath)
     {
         _excelFile = filepath;
+        _logger = Vehicle_Resolution_Libarary.Logger.GetInstance();
     }
 
     public List<MakeModel> GetRefData()
@@ -20,9 +22,17 @@ internal class ExcelProcessor
         //var refFile = $@"{Directory.GetCurrentDirectory()}\Agilis LIVE Make & Models.xlsx";
         var refFile = _excelFile;
         if(refFile is null)
+        {
+            _logger.Log("FileNotFoundException ==> No file was provided - The parameter was null.");
+            _logger.MarkAsEnd();
             throw new FileNotFoundException("No file was provided.");
+        }
         if(!File.Exists(_excelFile))
+        {
+            _logger.Log("FileNotFoundException ==> No file was provided - File does not exist.");
+            _logger.MarkAsEnd();
             throw new FileNotFoundException("No file was provided.");
+        }
         var vehicles = new List<MakeModel>();
         IWorkbook workbook;
         using (FileStream file = new FileStream(refFile, FileMode.Open, FileAccess.Read))
