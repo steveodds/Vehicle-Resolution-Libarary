@@ -8,14 +8,35 @@ namespace Vehicle_Resolution_Libarary
         private string _message;
         public string ResolveSingleWord(string original, string refExcelFile)
         {
+            var logger = Logger.GetInstance();
             if (string.IsNullOrWhiteSpace(original))
-                return "ERROR: The argument was empty.";
+            {
+                _message = "ERROR: The argument was empty.";
+                logger.Log($"{_message} - No word was given.");
+                logger.MarkAsEnd();
+                return _message;
+            }
             if (original.Length < 3)
-                return "ERROR: No reliable matches can be made for arguments with less than 3 characters.";
+            {
+                _message = "ERROR: No reliable matches can be made for arguments with less than 3 characters.";
+                logger.Log(_message);
+                logger.MarkAsEnd();
+                return _message;
+            }
             if (string.IsNullOrWhiteSpace(refExcelFile))
-                return "ERROR: No reference file was given.";
+            {
+                _message = "ERROR: No reference file was given.";
+                logger.Log($"{_message} - Given path: |{refExcelFile}|");
+                logger.MarkAsEnd();
+                return _message;
+            }
             if (!File.Exists(refExcelFile))
-                return "ERROR: Could not find file";
+            {
+                _message = "ERROR: Could not find file";
+                logger.Log($"{_message} - No such file exists at |{refExcelFile}|");
+                logger.MarkAsEnd();
+                return _message;
+            }
 
             if (original.Contains("xlsx") || original.Contains("xls"))
             {
@@ -24,12 +45,16 @@ namespace Vehicle_Resolution_Libarary
             }
             else
             {
+                logger.Log("Starting process...");
                 var check = new NearestCorrectSpelling(null, refExcelFile);
                 var result = check.GetWord(original, out int lev);
+                logger.Log("Checking result...");
                 if (lev == 1000 || lev < 0)
                     return "ERROR: No match was found.";
                 if (original.Length == 3 && lev > 1)
                     return "ERROR: No match was found.";
+                logger.Log("Result found. Submitting...");
+                logger.MarkAsEnd();
                 return result;
             }
             //return "error";
