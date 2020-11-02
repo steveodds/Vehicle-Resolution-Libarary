@@ -33,24 +33,37 @@ internal class ExcelProcessor
             _logger.MarkAsEnd();
             throw new FileNotFoundException("No file was provided.");
         }
-        var vehicles = new List<MakeModel>();
-        IWorkbook workbook;
-        using (FileStream file = new FileStream(refFile, FileMode.Open, FileAccess.Read))
-        {
-            workbook = WorkbookFactory.Create(file);
-        }
 
-        var importer = new Mapper(workbook);
-        var items = importer.Take<MakeModel>(0);
-        foreach (var item in items)
+        try
         {
-            var row = item.Value;
-            if (string.IsNullOrEmpty(row.Make))
-                continue;
+            var vehicles = new List<MakeModel>();
+            IWorkbook workbook;
+            using (FileStream file = new FileStream(refFile, FileMode.Open, FileAccess.Read))
+            {
+                workbook = WorkbookFactory.Create(file);
+            }
 
-            vehicles.Add(row);
+            var importer = new Mapper(workbook);
+            var items = importer.Take<MakeModel>(0);
+            foreach (var item in items)
+            {
+                var row = item.Value;
+                if (string.IsNullOrEmpty(row.Make))
+                    continue;
+
+                vehicles.Add(row);
+            }
+            return vehicles;
         }
-        return vehicles;
+        catch (Exception ex)
+        {
+            _logger.Log("Exception on processing reference Excel file:");
+            _logger.Log(ex.Message);
+            _logger.Log(ex.ToString());
+            _logger.Log(ex.InnerException.ToString());
+            _logger.MarkAsEnd();
+        }
+        return null;
     }
 
     public void GetGenesysData()

@@ -9,6 +9,7 @@
     <PackageReference Include="Fastenshtein" Version="1.0.0.5" />
     <PackageReference Include="NPOI" Version="2.5.1" />
     <PackageReference Include="Npoi.Mapper" Version="3.5.1" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
   </ItemGroup>
 
 </Project>
