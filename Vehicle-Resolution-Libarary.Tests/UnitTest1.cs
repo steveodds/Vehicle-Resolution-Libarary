@@ -37,7 +37,7 @@ namespace Vehicle_Resolution_Libarary.Tests
         {
             var lib = new Start();
             //var test = lib.ResolveSingleWord("SUNARU");
-            Assert.AreEqual(lib.ResolveSingleWord("SUNARU", @"C:\Users\user\Documents\sample\Agilis LIVE Make & Models.xlsx"), "SUBARU");
+            Assert.AreEqual(lib.ResolveSingleWord("SUNARU", @"C:\Users\user\Documents\sample\Agilis LIVE Make & Models.csv"), "SUBARU");
         }
 
     }
