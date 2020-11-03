@@ -40,8 +40,10 @@ namespace Vehicle_Resolution_Libarary
 
             if (original.Contains("xlsx") || original.Contains("xls"))
             {
-                var excelResult = ProcessFullExcel(original);
-                return excelResult.ToString();
+                _message = "ERROR: You provided a file as an argument in the wrong parameter.";
+                logger.Log($"{_message} - Wrong parameter |{original}|.");
+                logger.MarkAsEnd();
+                return _message;
             }
             else
             {
@@ -60,9 +62,10 @@ namespace Vehicle_Resolution_Libarary
             //return "error";
         }
 
-        public int ProcessFullExcel(string excelFile)
-        {
-            throw new NotImplementedException("This feature is currently disabled.");
-        }
+        ////DEPRECIATED
+        //public int ProcessFullExcel(string excelFile)
+        //{
+        //    throw new NotImplementedException("This feature is currently disabled.");
+        //}
     }
 }
