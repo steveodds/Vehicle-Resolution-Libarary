@@ -1,13 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using Npoi.Mapper;
-using Npoi.Mapper.Attributes;
-using NPOI.SS.UserModel;
 
 internal class ExcelProcessor
 {
+    //THIS CLASS HAS BEEN CONVERTED TO WORK WITH CSVs INSTEAD OF EXCELS, THE NAME REMAINS FOR "LEGACY REASONS"
     private readonly string _excelFile;
     private readonly Vehicle_Resolution_Libarary.Logger _logger;
     public List<MotorModel> RawMotorData {get; set;}
@@ -37,57 +34,73 @@ internal class ExcelProcessor
         try
         {
             var vehicles = new List<MakeModel>();
-            IWorkbook workbook;
-            using (FileStream file = new FileStream(refFile, FileMode.Open, FileAccess.Read))
+
+            var lines = File.ReadAllLines(refFile);
+            foreach (var line in lines)
             {
-                workbook = WorkbookFactory.Create(file);
+                var segments = line.Split(',');
+                vehicles.Add(new MakeModel { 
+                    Make = segments[0],
+                    Model = segments[1],
+                    Code = int.TryParse(segments[2], out int result) ? result : 0,
+                    Type = segments[3]
+                });
             }
 
-            var importer = new Mapper(workbook);
-            var items = importer.Take<MakeModel>(0);
-            foreach (var item in items)
-            {
-                var row = item.Value;
-                if (string.IsNullOrEmpty(row.Make))
-                    continue;
 
-                vehicles.Add(row);
-            }
+            //// NO LONGER READS EXCEL FILES
+            //IWorkbook workbook;
+            //using (FileStream file = new FileStream(refFile, FileMode.Open, FileAccess.Read))
+            //{
+            //    workbook = WorkbookFactory.Create(file);
+            //}
+
+            //var importer = new Mapper(workbook);
+            //var items = importer.Take<MakeModel>(0);
+            //foreach (var item in items)
+            //{
+            //    var row = item.Value;
+            //    if (string.IsNullOrEmpty(row.Make))
+            //        continue;
+
+            //    vehicles.Add(row);
+            //}
             return vehicles;
         }
         catch (Exception ex)
         {
-            _logger.Log("Exception on processing reference Excel file:");
+            _logger.Log("Exception on processing reference file:");
             _logger.Log(ex.Message);
             _logger.Log(ex.ToString());
-            _logger.Log(ex.InnerException.ToString());
+            _logger.Log(ex.InnerException is null ? "No inner exception." : ex.InnerException.ToString());
             _logger.MarkAsEnd();
         }
         return null;
     }
 
-    public void GetGenesysData()
-    {
-        IWorkbook workbook;
-        var names = new List<MotorModel>();
-        using (var file = new FileStream(_excelFile, FileMode.Open, FileAccess.Read))
-        {
-            workbook = WorkbookFactory.Create(file);
-        }
+    //DEPRECIATED
+    //public void GetGenesysData()
+    //{
+    //    IWorkbook workbook;
+    //    var names = new List<MotorModel>();
+    //    using (var file = new FileStream(_excelFile, FileMode.Open, FileAccess.Read))
+    //    {
+    //        workbook = WorkbookFactory.Create(file);
+    //    }
 
-        var sheet = workbook.GetSheetAt(0);
-        var row = 1;
-        while (sheet.GetRow(row) != null)
-        {
-            var makeCell = sheet.GetRow(row).GetCell(19);
-            names.Add(new MotorModel{
-                Make = makeCell.StringCellValue,
-                ExcelLocation = makeCell.Address.ToString()
-            });
-            row++;
-        }
-        RawMotorData = names.OrderBy(x => x.Make).ToList();
-    }
+    //    var sheet = workbook.GetSheetAt(0);
+    //    var row = 1;
+    //    while (sheet.GetRow(row) != null)
+    //    {
+    //        var makeCell = sheet.GetRow(row).GetCell(19);
+    //        names.Add(new MotorModel{
+    //            Make = makeCell.StringCellValue,
+    //            ExcelLocation = makeCell.Address.ToString()
+    //        });
+    //        row++;
+    //    }
+    //    RawMotorData = names.OrderBy(x => x.Make).ToList();
+    //}
 
     public void WriteFixedData(List<MotorModel> fixedModels)
     {
